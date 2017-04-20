@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     syncPodcasts();
-                    Toast.makeText(getApplicationContext(),"Signed in", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(),"Signed in", Toast.LENGTH_LONG).show();
                     Log.d("FirebaseAuth", "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     Toast.makeText(getApplicationContext(),"Not Signed in", Toast.LENGTH_LONG).show();
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<PopularPodcasts> call, Response<PopularPodcasts> response) {
                 int statusCode = response.code();
                 PopularPodcasts popularPodcasts = response.body();
-                Toast.makeText(getApplicationContext(),"Podcasts:"+popularPodcasts.getTotal()+" \n",Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"Podcasts:"+popularPodcasts.getTotal()+" \n",Toast.LENGTH_LONG).show();
                 int x = popularPodcasts.getTotal();
                 List<Podcast> podcasts = popularPodcasts.getPodcasts();
 

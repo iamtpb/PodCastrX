@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xipherlabs.podcastr.model.Podcast;
 
 /**
@@ -39,11 +42,17 @@ public class PodcastDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_podcast_detail, container, false);
-        if(podcast!=null){
 
             Toast.makeText(getContext(),"Podcast:"+podcast.getName(),Toast.LENGTH_LONG).show();
-        }
         Toast.makeText(getContext(),"Did it!",Toast.LENGTH_LONG).show();
+
+        ImageView img = (ImageView) view.findViewById(R.id.detail_image);
+        String imageUrl = podcast.getThumb();
+        Glide.with(getContext())
+                .load(podcast.getThumb().replace("170x170","600x600"))
+                .skipMemoryCache(false)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(img);
         return view;
     }
 }
