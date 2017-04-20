@@ -7,8 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-public class PodcastDetail extends AppCompatActivity {
+import com.xipherlabs.podcastr.model.Podcast;
 
+public class PodcastDetail extends AppCompatActivity {
+    public static final String ARG_PODCAST = "podcast";
+    public static final String FRAGMENT = "podcast_detail_fragment";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,11 +23,14 @@ public class PodcastDetail extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Added to Favorites", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        PodcastDetailFragment podcastDetailsFragment = PodcastDetailFragment.newInstance((Podcast) getIntent().getExtras().getSerializable(ARG_PODCAST));
+        getSupportFragmentManager().beginTransaction().replace(R.id.podcast_details,podcastDetailsFragment, FRAGMENT).commit();
     }
 
 }

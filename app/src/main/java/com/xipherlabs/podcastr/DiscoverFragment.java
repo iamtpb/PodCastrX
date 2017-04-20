@@ -105,19 +105,19 @@ public class DiscoverFragment extends Fragment {
 
             @Override
             protected void populateViewHolder(final PodcastViewHolder viewHolder,
-                                              Podcast friendlyMessage, int position) {
+                                              Podcast podcast, int position) {
                 viewHolder.podcastImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                     }
                 });
-                if (friendlyMessage.getName() != null) {
+                if (podcast.getName() != null) {
                     viewHolder.podcastImageView.setVisibility(ImageView.VISIBLE);
 
-                    String imageUrl = friendlyMessage.getThumb();
+                    String imageUrl = podcast.getThumb();
                     Glide.with(viewHolder.podcastImageView.getContext())
-                            .load(friendlyMessage.getThumb().replace("170x170","600x600"))
+                            .load(podcast.getThumb().replace("170x170","600x600"))
                             .skipMemoryCache(false)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(viewHolder.podcastImageView);
@@ -132,6 +132,7 @@ public class DiscoverFragment extends Fragment {
 
     public static class PodcastViewHolder extends RecyclerView.ViewHolder {
         //TextView podcastTextView;
+        Podcast podcast;
         ImageView podcastImageView;
         public PodcastViewHolder(View v) {
             super(v);

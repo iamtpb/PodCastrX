@@ -3,11 +3,13 @@ package com.xipherlabs.podcastr.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by xipher on 12/4/17.
  */
 
-public class Podcast {
+public class Podcast implements Serializable{
 
     @SerializedName("id")
     @Expose
