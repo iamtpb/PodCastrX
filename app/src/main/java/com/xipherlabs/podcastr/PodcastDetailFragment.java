@@ -40,7 +40,8 @@ public class PodcastDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_podcast_detail, container, false);
         if(podcast!=null){
-            Toast.makeText(getContext(),"Podcast "+podcast.getName(),Toast.LENGTH_LONG).show();
+
+            Toast.makeText(getContext(),"Podcast:"+podcast.getName(),Toast.LENGTH_LONG).show();
         }
         Toast.makeText(getContext(),"Did it!",Toast.LENGTH_LONG).show();
         return view;

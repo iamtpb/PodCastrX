@@ -1,6 +1,7 @@
 package com.xipherlabs.podcastr;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -22,10 +24,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.ValueEventListener;
 import com.xipherlabs.podcastr.model.Podcast;
+
+import java.util.ArrayList;
 
 
 /**
@@ -106,15 +112,22 @@ public class DiscoverFragment extends Fragment {
             @Override
             protected void populateViewHolder(final PodcastViewHolder viewHolder,
                                               Podcast podcast, int position) {
+                final Podcast mPodcast = podcast;
+
                 viewHolder.podcastImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        Log.d("____YYY____","Clicked?");
+                        Toast.makeText(getContext(),"Intent",Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(getContext(), PodcastDetail.class)
+                                .putExtra(PodcastDetail.ARG_PODCAST, (Podcast) mPodcast);
+                        startActivity(i);
+                        //mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                     }
                 });
                 if (podcast.getName() != null) {
                     viewHolder.podcastImageView.setVisibility(ImageView.VISIBLE);
-
+                    viewHolder.podcastIdTextView.setText(podcast.getId());
                     String imageUrl = podcast.getThumb();
                     Glide.with(viewHolder.podcastImageView.getContext())
                             .load(podcast.getThumb().replace("170x170","600x600"))
@@ -130,26 +143,18 @@ public class DiscoverFragment extends Fragment {
         return view;
     }
 
-    public static class PodcastViewHolder extends RecyclerView.ViewHolder {
-        //TextView podcastTextView;
+    public static class PodcastViewHolder extends RecyclerView.ViewHolder{
+        TextView podcastIdTextView;
         Podcast podcast;
         ImageView podcastImageView;
+        View mView;
+        Context mContext;
         public PodcastViewHolder(View v) {
             super(v);
-
-
-
-           /* v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(),"Clicked: "+getAdapterPosition(),Toast.LENGTH_LONG).show();
-
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }
-            });*/
-            //podcastTextView = (TextView) itemView.findViewById(R.id.podcastTextView);
+            mView = v;
+            mContext = v.getContext();
+            podcastIdTextView = (TextView) itemView.findViewById(R.id.podcastId);
             podcastImageView = (ImageView) itemView.findViewById(R.id.podcastImageView);
-
         }
 
     }
