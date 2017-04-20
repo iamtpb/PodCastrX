@@ -91,33 +91,12 @@ public class MainActivity extends AppCompatActivity
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Log.w("GGGGG", "signInAnonymously", task.getException());
+                            Log.w("FirebaseAuth", "signInAnonymously", task.getException());
                             Toast.makeText(getApplicationContext(), "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-        // Write a message to the database
-
-        //myRef.child("favs").setValue("Freakonomics");
-
-        /* Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                Log.d("GG", "Value is: " + value);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("GG", "Failed to read value.", error.toException());
-            }
-        });
-        */
     }
 
     @Override
