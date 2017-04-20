@@ -117,8 +117,8 @@ public class DiscoverFragment extends Fragment {
                 viewHolder.podcastImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d("____YYY____","Clicked?");
-                        Toast.makeText(getContext(),"Intent",Toast.LENGTH_LONG).show();
+                        //Log.d("____YYY____","Clicked?");
+                        //Toast.makeText(getContext(),"Intent",Toast.LENGTH_LONG).show();
                         Intent i = new Intent(getContext(), PodcastDetail.class)
                                 .putExtra(PodcastDetail.ARG_PODCAST, (Podcast) mPodcast);
                         startActivity(i);
