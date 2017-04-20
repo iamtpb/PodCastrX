@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -105,6 +106,12 @@ public class DiscoverFragment extends Fragment {
             @Override
             protected void populateViewHolder(final PodcastViewHolder viewHolder,
                                               Podcast friendlyMessage, int position) {
+                viewHolder.podcastImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    }
+                });
                 if (friendlyMessage.getName() != null) {
                     viewHolder.podcastImageView.setVisibility(ImageView.VISIBLE);
 
@@ -131,19 +138,18 @@ public class DiscoverFragment extends Fragment {
 
 
 
-            v.setOnClickListener(new View.OnClickListener() {
+           /* v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(v.getContext(),"Clicked: "+getAdapterPosition(),Toast.LENGTH_LONG).show();
 
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 }
-            });
+            });*/
             //podcastTextView = (TextView) itemView.findViewById(R.id.podcastTextView);
             podcastImageView = (ImageView) itemView.findViewById(R.id.podcastImageView);
 
         }
+
     }
-
-
 }
