@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class DiscoverFragment extends Fragment {
     static String TAG = "DiscoverFragment";
     private RecyclerView mMessageRecyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
     private GridLayoutManager mGridLayoutManager;
 
     private FirebaseRecyclerAdapter<Podcast, MessageViewHolder> mFirebaseAdapter;
@@ -92,20 +92,11 @@ public class DiscoverFragment extends Fragment {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         //database.setPersistenceEnabled(true);
         String uid = user.getUid();
-        /*
-        Copy Starts Here
-         */
 
         mMessageRecyclerView = (RecyclerView) view.findViewById(R.id.podcastsRecyclerView);
-        mLinearLayoutManager = new LinearLayoutManager(getContext());
-
         mGridLayoutManager = new GridLayoutManager(getContext(),2);
-
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference(user.getUid());
-
         mFirebaseDatabaseReference.keepSynced(true);
-        FirebaseDatabase.getInstance().goOffline();
-
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Podcast, MessageViewHolder>(
                 Podcast.class,
                 R.layout.item_podcast,
@@ -114,19 +105,18 @@ public class DiscoverFragment extends Fragment {
 
             @Override
             protected Podcast parseSnapshot(DataSnapshot snapshot) {
-                Podcast friendlyMessage = super.parseSnapshot(snapshot);
-                if (friendlyMessage != null) {
-                    friendlyMessage.setId(snapshot.getKey());
+                Podcast podcast = super.parseSnapshot(snapshot);
+                if (podcast != null) {
+                    podcast.setId(snapshot.getKey());
+                    Log.d("PodcastSnap",""+snapshot.getValue());
                 }
-                return friendlyMessage;
+                return podcast;
             }
 
             @Override
             protected void populateViewHolder(final MessageViewHolder viewHolder,
                                               Podcast friendlyMessage, int position) {
                 if (friendlyMessage.getName() != null) {
-                    /*viewHolder.podcastTextView.setText(friendlyMessage.getName());
-                    viewHolder.podcastTextView.setVisibility(TextView.VISIBLE);*/
                     viewHolder.podcastImageView.setVisibility(ImageView.VISIBLE);
 
                     String imageUrl = friendlyMessage.getThumb();
@@ -137,132 +127,10 @@ public class DiscoverFragment extends Fragment {
                             .into(viewHolder.podcastImageView);
 
                 }
-
-
-                //viewHolder.messengerTextView.setText(friendlyMessage.getName());
-               /* if (friendlyMessage.getThumb() == null) {
-                    viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(getContext(),
-                            R.drawable.ic_account_circle_black_36dp));
-                } else {
-                    Glide.with(DiscoverFragment.this)
-                            .load(friendlyMessage.getThumb())
-                            .into(viewHolder.podcastImageView);
-                }*/
-
-                /*if (friendlyMessage.getName() != null) {
-                    // write this message to the on-device index
-                    FirebaseAppIndex.getInstance().update(getMessageIndexable(friendlyMessage));
-                }
-
-                // log a view action on it
-                FirebaseUserActions.getInstance().end(getMessageViewAction(friendlyMessage));*/
             }
         };
-
-
-      /*  mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                int friendlyMessageCount = mFirebaseAdapter.getItemCount();
-                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
-                // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
-                // to the bottom of the list to show the newly added message.
-               *//* if (lastVisiblePosition == -1 ||
-                        (positionStart >= (friendlyMessageCount - 1) && lastVisiblePosition == (positionStart - 1))) {
-                    mMessageRecyclerView.scrollToPosition(positionStart);
-                }*//*
-            }
-        });
-*/
         mMessageRecyclerView.setLayoutManager(mGridLayoutManager);
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
-
-
-
-        //
-        //
-        //
-        //
-        //
-        //
-        /*
-        String uid = user.getUid();
-        if(uid==null){return view;}
-        Log.d(TAG,"Moving Further");
-        DatabaseReference userBranch = database.getReference(user.getUid()).child("popular");
-        userBranch.keepSynced(true);
-        Log.d(TAG,userBranch.getKey());
-        final ArrayList<Podcast> podcasts = new ArrayList<>();
-        RecyclerView rvPodcasts = (RecyclerView) view.findViewById(R.id.discover_list);
-        rvPodcasts.setLayoutManager(new LinearLayoutManager(getContext()));
-        // Initialize contacts
-        //podcasts = Contact.createContactsList(20);
-        // Create adapter passing in the sample user data
-        final DiscoverAdapter adapter = new DiscoverAdapter(getContext(), podcasts);
-        podcasts.add(new Podcast("asd","asd","asd","asd"));
-        rvPodcasts.setAdapter(adapter);
-        userBranch.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Podcast podcast = dataSnapshot.getValue(Podcast.class);
-                //podcasts.add(podcast);
-                adapter.add(podcast);
-                adapter.notifyDataSetChanged();
-
-                Log.d("DiscoveredPodcasts",""+podcast.getName());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Podcast podcast = dataSnapshot.getValue(Podcast.class);
-                //podcasts.remove(arrayAdapter.getItem(Integer.parseInt(dataSnapshot.getKey())));
-                podcasts.add(podcast);
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-       *//* userBranch.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Podcast> podcasts = (ArrayList<Podcast>) dataSnapshot.getValue();
-                Toast.makeText(getContext(),"Changed Count: "+dataSnapshot.getChildrenCount(),Toast.LENGTH_LONG).show();
-                Toast.makeText(getContext(),"Pod0: "+podcasts.get(0).getName(),Toast.LENGTH_LONG).show();
-
-                //values = new ArrayList<String>();
-                *//**//*values.add(podcasts.get(0).getName());
-                values.add(podcasts.get(1).getName());
-                values.add(podcasts.get(2).getName());*//**//*
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(getContext(),"Count: "+databaseError.getMessage(),Toast.LENGTH_LONG).show();
-            }
-        });*//*
-
-        // Attach the adapter to the recyclerview to populate items
-
-        adapter.notifyDataSetChanged();
-        adapter.printPods();
-        Log.d("Items:","no: "+adapter.getItemCount());
-        // Set layout manager to position the items
-
-*/
         return view;
     }
 

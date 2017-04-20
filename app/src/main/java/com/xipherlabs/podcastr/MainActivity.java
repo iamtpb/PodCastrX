@@ -60,36 +60,8 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_pane, (Fragment) DiscoverFragment.newInstance()).commit();
 
-        Log.d("PodCastr","Startup");
+        syncPodcasts();
 
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<PopularPodcasts> call = apiService.getPopularPodcasts();
-        call.enqueue(new Callback<PopularPodcasts>() {
-            @Override
-            public void onResponse(Call<PopularPodcasts> call, Response<PopularPodcasts> response) {
-                int statusCode = response.code();
-                PopularPodcasts popularPodcasts = response.body();
-                Toast.makeText(getApplicationContext(),"Podcasts:"+popularPodcasts.getTotal()+" \n",Toast.LENGTH_LONG).show();
-                int x = popularPodcasts.getTotal();
-                List<Podcast> podcasts = popularPodcasts.getPodcasts();
-                List<String> names = new ArrayList<String>();
-                for(Podcast podcast:podcasts){
-                    names.add(podcast.getName());
-                }
-                //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference(user.getUid());
-                myRef.keepSynced(true);
-                myRef.child("popular").setValue(podcasts);
-
-            }
-
-            @Override
-            public void onFailure(Call<PopularPodcasts> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"Error!", Toast.LENGTH_LONG).show();
-            }
-        });
         //Init Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -226,6 +198,35 @@ public class MainActivity extends AppCompatActivity
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+    public void syncPodcasts(){
+        if(!isNetworkAvailable())
+            return;
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<PopularPodcasts> call = apiService.getPopularPodcasts();
+        call.enqueue(new Callback<PopularPodcasts>() {
+            @Override
+            public void onResponse(Call<PopularPodcasts> call, Response<PopularPodcasts> response) {
+                int statusCode = response.code();
+                PopularPodcasts popularPodcasts = response.body();
+                Toast.makeText(getApplicationContext(),"Podcasts:"+popularPodcasts.getTotal()+" \n",Toast.LENGTH_LONG).show();
+                int x = popularPodcasts.getTotal();
+                List<Podcast> podcasts = popularPodcasts.getPodcasts();
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+                DatabaseReference myRef = database.getReference(user.getUid());
+                myRef.keepSynced(true);
+                myRef.child("popular").setValue(podcasts);
+            }
+
+            @Override
+            public void onFailure(Call<PopularPodcasts> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),"Error updating Firebase Backend", Toast.LENGTH_LONG).show();
+            }
+        });
     }
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
