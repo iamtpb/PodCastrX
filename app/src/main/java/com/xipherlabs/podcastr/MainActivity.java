@@ -57,9 +57,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_pane, (Fragment) DiscoverFragment.newInstance()).commit();
-
         syncPodcasts();
 
         //Init Firebase Auth
@@ -69,34 +66,18 @@ public class MainActivity extends AppCompatActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
-                    Toast.makeText(getApplicationContext(),"Signed IN: "+user.getUid(), Toast.LENGTH_LONG).show();
-                    Log.d("GG", "onAuthStateChanged:signed_in:" + user.getUid());
+                    Toast.makeText(getApplicationContext(),"Signed in", Toast.LENGTH_LONG).show();
+                    Log.d("FirebaseAuth", "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
-                    // User is signed out
                     Toast.makeText(getApplicationContext(),"Not Signed in", Toast.LENGTH_LONG).show();
-                    Log.d("GG", "onAuthStateChanged:signed_out");
+                    Log.d("FirebaseAuth", "onAuthStateChanged:signed_out");
                 }
-                // ...
             }
         };
 
-        mAuth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("GG", "signInAnonymously:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w("FirebaseAuth", "signInAnonymously", task.getException());
-                            Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        mAuth.signInAnonymously();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_pane, (Fragment) DiscoverFragment.newInstance()).commit();
     }
 
     @Override
