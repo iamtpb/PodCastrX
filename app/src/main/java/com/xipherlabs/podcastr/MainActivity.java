@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    public View bottomSheet = null;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,19 +58,19 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
+        Utils.initFirebasePersistence();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        syncPodcasts();
-
         //Init Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        mAuth.signInAnonymously();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    syncPodcasts();
                     Toast.makeText(getApplicationContext(),"Signed in", Toast.LENGTH_LONG).show();
                     Log.d("FirebaseAuth", "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
@@ -77,14 +80,6 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        View bottomSheet = findViewById( R.id.bottom_sheet );
-        BottomSheetBehavior mBottomSheetBehavior;
-        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-
-        mBottomSheetBehavior.setPeekHeight(200);
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-        mAuth.signInAnonymously();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_pane, (Fragment) DiscoverFragment.newInstance()).commit();
     }

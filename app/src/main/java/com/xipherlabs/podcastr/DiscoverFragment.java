@@ -1,18 +1,19 @@
 package com.xipherlabs.podcastr;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -25,8 +26,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.xipherlabs.podcastr.model.Podcast;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,8 +37,10 @@ public class DiscoverFragment extends Fragment {
     private RecyclerView mMessageRecyclerView;
     private GridLayoutManager mGridLayoutManager;
 
-    private FirebaseRecyclerAdapter<Podcast, MessageViewHolder> mFirebaseAdapter;
+    private FirebaseRecyclerAdapter<Podcast, PodcastViewHolder> mFirebaseAdapter;
     private DatabaseReference mFirebaseDatabaseReference;
+    private View bottomSheet;
+    static private BottomSheetBehavior mBottomSheetBehavior = null;
 
     public DiscoverFragment() {
         // Required empty public constructor
@@ -60,6 +61,7 @@ public class DiscoverFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
     @Override
@@ -70,16 +72,24 @@ public class DiscoverFragment extends Fragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         //database.setPersistenceEnabled(true);
+
+
+        bottomSheet = view.findViewById( R.id.bottom_sheet );
+        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+
+        mBottomSheetBehavior.setPeekHeight(0);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
         String uid = user.getUid();
 
         mMessageRecyclerView = (RecyclerView) view.findViewById(R.id.podcastsRecyclerView);
         mGridLayoutManager = new GridLayoutManager(getContext(),2);
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference(user.getUid());
         mFirebaseDatabaseReference.keepSynced(true);
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<Podcast, MessageViewHolder>(
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<Podcast, PodcastViewHolder>(
                 Podcast.class,
                 R.layout.item_podcast,
-                MessageViewHolder.class,
+                PodcastViewHolder.class,
                 mFirebaseDatabaseReference.child("popular")) {
 
             @Override
@@ -93,7 +103,7 @@ public class DiscoverFragment extends Fragment {
             }
 
             @Override
-            protected void populateViewHolder(final MessageViewHolder viewHolder,
+            protected void populateViewHolder(final PodcastViewHolder viewHolder,
                                               Podcast friendlyMessage, int position) {
                 if (friendlyMessage.getName() != null) {
                     viewHolder.podcastImageView.setVisibility(ImageView.VISIBLE);
@@ -113,16 +123,20 @@ public class DiscoverFragment extends Fragment {
         return view;
     }
 
-    public static class MessageViewHolder extends RecyclerView.ViewHolder {
+    public static class PodcastViewHolder extends RecyclerView.ViewHolder {
         //TextView podcastTextView;
         ImageView podcastImageView;
-
-        public MessageViewHolder(View v) {
+        public PodcastViewHolder(View v) {
             super(v);
+
+
+
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(v.getContext(),"Clicked: "+getAdapterPosition(),Toast.LENGTH_LONG).show();
+
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 }
             });
             //podcastTextView = (TextView) itemView.findViewById(R.id.podcastTextView);
