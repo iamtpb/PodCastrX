@@ -5,13 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.xipherlabs.podcastr.PodcastDetailFragment">
-<!--    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">-->
-
+        android:layout_height="match_parent"
+        android:id="@+id/base_thing"
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/detail_linearLayout"
+            android:elevation="6dp"
             android:orientation="vertical">
             <ImageView
                 android:layout_width="200dp"
@@ -20,29 +23,33 @@
                 android:padding="16dp"
                 android:id="@+id/detail_image"/>
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_gravity="center"
                 android:textAlignment="center"
                 android:id="@+id/detail_description"
                 android:text="Description"
-                style="?attr/textAppearanceListItem"/>
+                style="?attr/textAppearanceListItem" />
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="?attr/textAppearanceListItemSmall"
                 android:text="Available Episodes"
-                android:padding="8dp"/>
-            <android.support.v7.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/detail_episodes">
-
-            </android.support.v7.widget.RecyclerView>
-
+                android:padding="8dp" />
         </LinearLayout>
-<!--    </ScrollView>-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorPrimaryDark"
+            android:id="@+id/anchorThing"/>
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/detail_episodes">
 
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+    <!--    </ScrollView>-->
 
 </android.support.constraint.ConstraintLayout>

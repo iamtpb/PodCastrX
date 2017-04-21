@@ -119,8 +119,10 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
             Toast.makeText(getContext(),"Error: Couldn't fetch Data from Server",Toast.LENGTH_SHORT).show();
             return;
         }
-        tv_desc.setText(data.getDescription());
-        adapter = new EpisodesAdapter(data.getEpisodes());
+        if(data.getDescription()!=null)
+            tv_desc.setText(data.getDescription());
+        if(data.getEpisodes()!=null)
+            adapter = new EpisodesAdapter(data.getEpisodes());
         mRecyclerView.setAdapter(adapter);
     }
 
