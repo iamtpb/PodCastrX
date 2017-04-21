@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -50,16 +51,22 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.Episod
     }
 
     @Override
-    public void onBindViewHolder(EpisodeViewHolder personViewHolder, int i) {
+    public void onBindViewHolder(final EpisodeViewHolder personViewHolder, int i) {
         personViewHolder.personName.setText(episodes.get(i).getTitle());
         personViewHolder.personAge.setText(episodes.get(i).getDescription().split("<")[0]);
-        //personViewHolder.personPhoto.setImageResource(R.mipmap.ic_placeholder);
-        Glide.with(personViewHolder.personPhoto.getContext())
+        personViewHolder.personPhoto.setImageResource(R.drawable.ic_play_icon);
+        /*Glide.with(personViewHolder.personPhoto.getContext())
                 .load(episodes.get(i).getThumb())
                 .skipMemoryCache(false)
                 .thumbnail(0.2f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(personViewHolder.personPhoto);
+                .into(personViewHolder.personPhoto);*/
+        personViewHolder.personPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(personViewHolder.personPhoto.getContext(),"Touched Play!",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

@@ -28,8 +28,9 @@ public class PodcastDetail extends AppCompatActivity {
             }
         });*/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        PodcastDetailFragment podcastDetailsFragment = PodcastDetailFragment.newInstance((Podcast) getIntent().getExtras().getSerializable(ARG_PODCAST));
+        Podcast podcast = (Podcast) getIntent().getExtras().getSerializable(ARG_PODCAST);
+        setTitle(podcast.getName());
+        PodcastDetailFragment podcastDetailsFragment = PodcastDetailFragment.newInstance(podcast);
         getSupportFragmentManager().beginTransaction().replace(R.id.podcast_details,podcastDetailsFragment, FRAGMENT).commit();
     }
 
