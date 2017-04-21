@@ -149,9 +149,14 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
 
     @Override public void onLoadFinished(Loader<List<Episode>> loader, List<Episode> data) {
         // Set the new data in the adapter.
+        if(data==null){
+            Toast.makeText(getContext(),"Error: Couldn't fetch Data from Server",Toast.LENGTH_SHORT).show();
+            return;
+        }
         adapter = new EpisodesAdapter(data);
         Log.d("__LoadFinish__",""+data.get(0).getTitle());
         mRecyclerView.setAdapter(adapter);
+
         // The list should now be shown.
         /*if (isResumed()) {
             set(true);

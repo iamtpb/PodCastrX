@@ -19,6 +19,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+//Reference: https://developer.android.com/reference/android/content/AsyncTaskLoader.html
+
 public class EpisodeLoader extends AsyncTaskLoader<List<Episode>> {
     Podcast podcast;
     private List<Episode> mData;
@@ -36,19 +39,12 @@ public class EpisodeLoader extends AsyncTaskLoader<List<Episode>> {
         try{
             feed = call.execute().body();
         }catch (Exception e){
-            Log.d("SyncRetrofit",""+e.getMessage());
+            Log.e("SyncRetroLoader",""+e.getMessage());
         }
         if(feed==null){
             return null;
         }
-        List<Episode> episodes = feed.getEpisodes();
-        Log.d("___Episode___", "" + episodes.get(0).getTitle());
-
-        /*TaskService taskService = ServiceGenerator.createService(TaskService.class);
-        Call<List<Task>> call = taskService.getTasks();
-        List<Task>> tasks = call.execute().body();
-        */
-        return episodes;
+        return feed.getEpisodes();
     }
 
 
