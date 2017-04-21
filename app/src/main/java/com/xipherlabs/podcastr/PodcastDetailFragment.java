@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.xipherlabs.podcastr.model.Episode;
 import com.xipherlabs.podcastr.model.Feed;
 import com.xipherlabs.podcastr.model.Podcast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -72,11 +74,9 @@ public class PodcastDetailFragment extends Fragment {
                 .into(img);
         Log.d("DetailFrag",""+podcast.getId());
         //
-        RecyclerView mRecyclerView;
-        RecyclerView.Adapter mAdapter;
-        RecyclerView.LayoutManager mLayoutManager;
+        final List<Episode> episodex = new ArrayList<>();
 
-
+        //
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<Feed> call = apiService.getFeed(podcast.getId());
         call.enqueue(new Callback<Feed>() {
@@ -89,8 +89,10 @@ public class PodcastDetailFragment extends Fragment {
                 tv_desc.setText(feed.getDescription());
                 List<Episode> episodes = feed.getEpisodes();
                 Log.d("Feed",""+x);
-                for(Episode e:episodes)
-                    Log.d("Episode",""+e.getTitle());
+                for(Episode e : episodes) {
+                    episodex.add(e);
+                    Log.d("Episode", "" + e.getTitle());
+                }
             }
 
             @Override
@@ -99,6 +101,21 @@ public class PodcastDetailFragment extends Fragment {
                 Toast.makeText(getContext(),"Error fetching Feed: "+t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+
+        //
+        RecyclerView mRecyclerView;
+        RecyclerView.Adapter mAdapter;
+        RecyclerView.LayoutManager linearLayoutManager;
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.detail_episodes);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+
+        EpisodesAdapter adapter = new EpisodesAdapter(episodex);
+        mRecyclerView.setAdapter(adapter);
+        Log.d("Adapter",""+adapter.episodes);
+
+
+        //
         return view;
     }
 
