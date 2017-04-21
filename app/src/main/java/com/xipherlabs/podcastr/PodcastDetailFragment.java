@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +61,7 @@ public class PodcastDetailFragment extends Fragment {
 
         ImageView img = (ImageView) view.findViewById(R.id.detail_image);
         final TextView tv = (TextView) view.findViewById(R.id.detail_name);
+        final TextView tv_desc = (TextView) view.findViewById(R.id.detail_description);
         tv.setText(podcast.getName());
         String imageUrl = podcast.getThumb();
         Glide.with(getContext())
@@ -69,26 +71,23 @@ public class PodcastDetailFragment extends Fragment {
                 .centerCrop()
                 .into(img);
         Log.d("DetailFrag",""+podcast.getId());
+        //
+        RecyclerView mRecyclerView;
+        RecyclerView.Adapter mAdapter;
+        RecyclerView.LayoutManager mLayoutManager;
+
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<Feed> call = apiService.getFeed(podcast.getId());
         call.enqueue(new Callback<Feed>() {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> response) {
-                //Toast.makeText(getContext(),"Resp:"+response.raw().toString(), Toast.LENGTH_LONG).show();
-                //tv.setText("Resp:"+response.raw().toString());
                 int statusCode = response.code();
                 Feed feed = response.body();
                 Toast.makeText(getContext(),"Podcast:"+feed.getName()+" \n",Toast.LENGTH_LONG).show();
                 String x = feed.getTotal();
+                tv_desc.setText(feed.getDescription());
                 List<Episode> episodes = feed.getEpisodes();
-
-                /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-                DatabaseReference myRef = database.getReference(user.getUid());
-                myRef.keepSynced(true);
-                myRef.child("episodes").setValue(episodes);*/
                 Log.d("Feed",""+x);
                 for(Episode e:episodes)
                     Log.d("Episode",""+e.getTitle());
@@ -100,8 +99,6 @@ public class PodcastDetailFragment extends Fragment {
                 Toast.makeText(getContext(),"Error fetching Feed: "+t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-
-        //getFeed(view.getContext());
         return view;
     }
 
@@ -112,22 +109,9 @@ public class PodcastDetailFragment extends Fragment {
         call.enqueue(new Callback<Feed>() {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> response) {
-                //Toast.makeText(context,"Resp:"+response.raw().toString(), Toast.LENGTH_LONG).show();
                 int statusCode = response.code();
                 Feed feed = response.body();
-                //Toast.makeText(getApplicationContext(),"Podcasts:"+popularPodcasts.getTotal()+" \n",Toast.LENGTH_LONG).show();
-                //int x = feed.getTotal();
                 List<Episode> episodes = feed.getEpisodes();
-
-                /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-                DatabaseReference myRef = database.getReference(user.getUid());
-                myRef.keepSynced(true);
-                myRef.child("episodes").setValue(episodes);*/
-                //Log.d("Feed",""+x);
-                /*for(Episode e:episodes)
-                    Log.d("Episode",""+e.getTitle());*/
             }
 
             @Override

@@ -13,6 +13,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:id="@+id/detail_image"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -21,11 +26,26 @@
                 android:layout_gravity="center"
                 style="@style/Base.TextAppearance.AppCompat.Large"
                 android:id="@+id/detail_name"/>
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
                 android:layout_gravity="center"
-                android:id="@+id/detail_image"/>
+                android:textAlignment="center"
+                android:id="@+id/detail_description"
+                android:text="Description"
+                style="?attr/textAppearanceListItem"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?attr/textAppearanceListItemSmall"
+                android:text="Available Episodes:"/>
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </android.support.v7.widget.RecyclerView>
+
         </LinearLayout>
     </ScrollView>
 
