@@ -84,6 +84,8 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.Episod
 
     @Override
     public int getItemCount() {
+        if(episodes==null)
+            return 0;
         return episodes.size();
     }
 }

@@ -35,13 +35,14 @@ import retrofit2.Response;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PodcastDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Episode>> {
+public class PodcastDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Feed> {
     private static final String ARG_PODCAST = "podcast";
     private Podcast podcast;
     RecyclerView mRecyclerView;
     //RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager linearLayoutManager;
     EpisodesAdapter adapter;
+    TextView tv_desc;
     public PodcastDetailFragment() {
     }
 
@@ -67,7 +68,7 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_podcast_detail, container, false);
         ImageView img = (ImageView) view.findViewById(R.id.detail_image);
-        final TextView tv_desc = (TextView) view.findViewById(R.id.detail_description);
+        tv_desc = (TextView) view.findViewById(R.id.detail_description);
         getActivity().setTitle(podcast.getName());
         String imageUrl = podcast.getThumb();
         Glide.with(getContext())
@@ -77,46 +78,11 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
                 .centerCrop()
                 .into(img);
         Log.d("DetailFrag",""+podcast.getId());
-        //
         final List<Episode> episodex = new ArrayList<>();
-
-        //
-       /* ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<Feed> call = apiService.getFeed(podcast.getId());
-        call.enqueue(new Callback<Feed>() {
-            @Override
-            public void onResponse(Call<Feed> call, Response<Feed> response) {
-                int statusCode = response.code();
-                Feed feed = response.body();
-                Toast.makeText(getContext(),"Podcast:"+feed.getName()+" \n",Toast.LENGTH_LONG).show();
-                String x = feed.getTotal();
-                tv_desc.setText(feed.getDescription());
-                List<Episode> episodes = feed.getEpisodes();
-                Log.d("Feed",""+x);
-                for(Episode e : episodes) {
-                    episodex.add(e);
-                    Log.d("Episode", "" + e.getTitle());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Feed> call, Throwable t) {
-                //tv.setText(t.getMessage());
-                Toast.makeText(getContext(),"Error fetching Feed: "+t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });*/
-
-        //
         mRecyclerView = (RecyclerView) view.findViewById(R.id.detail_episodes);
         linearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(adapter);
-
-        //adapter = new EpisodesAdapter(episodex);
-        //Log.d("Adapter",""+adapter.episodes);
-
-
-        //
         return view;
     }
 
@@ -141,31 +107,24 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
     }
 
     //Loader Stuff
-    @Override public Loader<List<Episode>> onCreateLoader(int id, Bundle args) {
+    @Override public Loader<Feed> onCreateLoader(int id, Bundle args) {
         // This is called when a new Loader needs to be created.  This
         // sample only has one Loader with no arguments, so it is simple.
         return new EpisodeLoader(getActivity(),podcast);
     }
 
-    @Override public void onLoadFinished(Loader<List<Episode>> loader, List<Episode> data) {
+    @Override public void onLoadFinished(Loader<Feed> loader, Feed data) {
         // Set the new data in the adapter.
         if(data==null){
             Toast.makeText(getContext(),"Error: Couldn't fetch Data from Server",Toast.LENGTH_SHORT).show();
             return;
         }
-        adapter = new EpisodesAdapter(data);
-        Log.d("__LoadFinish__",""+data.get(0).getTitle());
+        tv_desc.setText(data.getDescription());
+        adapter = new EpisodesAdapter(data.getEpisodes());
         mRecyclerView.setAdapter(adapter);
-
-        // The list should now be shown.
-        /*if (isResumed()) {
-            set(true);
-        } else {
-            setListShownNoAnimation(true);
-        }*/
     }
 
-    @Override public void onLoaderReset(Loader<List<Episode>> loader) {
+    @Override public void onLoaderReset(Loader<Feed> loader) {
         // Clear the data in the adapter.
         adapter = null;
     }

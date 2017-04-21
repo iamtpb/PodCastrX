@@ -22,9 +22,9 @@ import retrofit2.Response;
 
 //Reference: https://developer.android.com/reference/android/content/AsyncTaskLoader.html
 
-public class EpisodeLoader extends AsyncTaskLoader<List<Episode>> {
+public class EpisodeLoader extends AsyncTaskLoader<Feed> {
     Podcast podcast;
-    private List<Episode> mData;
+    private Feed mData;
 
     public EpisodeLoader(Context context,Podcast podcast) {
         super(context);
@@ -32,19 +32,20 @@ public class EpisodeLoader extends AsyncTaskLoader<List<Episode>> {
     }
 
     @Override
-    public List<Episode> loadInBackground() {
-        ApiInterface api = ApiClient.getClient().create(ApiInterface.class);
-        Call<Feed> call = api.getFeed(podcast.getId());
-        Feed feed = null;
+    public Feed loadInBackground() {
         try{
+            ApiInterface api = ApiClient.getClient().create(ApiInterface.class);
+            Call<Feed> call = api.getFeed(podcast.getId());
+            Feed feed = null;
             feed = call.execute().body();
+            if(feed==null){
+                return null;
+            }
+            return feed;
         }catch (Exception e){
             Log.e("SyncRetroLoader",""+e.getMessage());
         }
-        if(feed==null){
-            return null;
-        }
-        return feed.getEpisodes();
+        return null;
     }
 
 
@@ -53,21 +54,21 @@ public class EpisodeLoader extends AsyncTaskLoader<List<Episode>> {
      * super class will take care of delivering it; the implementation
      * here just adds a little more logic.
      */
-    @Override public void deliverResult(List<Episode> episodes) {
+    @Override public void deliverResult(Feed feed) {
         if (isReset()) {
             // An async query came in while the loader is stopped.  We
             // don't need the result.
-            if (episodes != null) {
-                onReleaseResources(episodes);
+            if (feed != null) {
+                onReleaseResources(feed);
             }
         }
-        List<Episode> oldApps = mData;
+        Feed oldApps = mData;
 
-        mData = episodes;
+        mData = feed;
         if (isStarted()) {
             // If the Loader is currently started, we can immediately
             // deliver its results.
-            super.deliverResult(episodes);
+            super.deliverResult(feed);
         }
 
         // At this point we can release the resources associated with
@@ -105,7 +106,7 @@ public class EpisodeLoader extends AsyncTaskLoader<List<Episode>> {
     /**
      * Handles a request to cancel a load.
      */
-    @Override public void onCanceled(List<Episode> episodes) {
+    @Override public void onCanceled(Feed episodes) {
         super.onCanceled(episodes);
 
         // At this point we can release the resources associated with 'apps'
@@ -133,7 +134,7 @@ public class EpisodeLoader extends AsyncTaskLoader<List<Episode>> {
      * Helper function to take care of releasing resources associated
      * with an actively loaded data set.
      */
-    protected void onReleaseResources(List<Episode> episodes) {
+    protected void onReleaseResources(Feed episodes) {
         // For a simple List<> there is nothing to do.  For something
         // like a Cursor, we would close it here.
     }
