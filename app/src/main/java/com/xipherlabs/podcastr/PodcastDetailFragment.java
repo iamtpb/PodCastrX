@@ -1,9 +1,12 @@
 package com.xipherlabs.podcastr;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,9 +35,13 @@ import retrofit2.Response;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PodcastDetailFragment extends Fragment {
+public class PodcastDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Episode>> {
     private static final String ARG_PODCAST = "podcast";
     private Podcast podcast;
+    RecyclerView mRecyclerView;
+    //RecyclerView.Adapter mAdapter;
+    RecyclerView.LayoutManager linearLayoutManager;
+    EpisodesAdapter adapter;
     public PodcastDetailFragment() {
     }
 
@@ -51,6 +58,7 @@ public class PodcastDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             podcast = (Podcast) getArguments().getSerializable(ARG_PODCAST);
+            getLoaderManager().initLoader(0, null, this);
         }
     }
 
@@ -73,7 +81,7 @@ public class PodcastDetailFragment extends Fragment {
         final List<Episode> episodex = new ArrayList<>();
 
         //
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+       /* ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<Feed> call = apiService.getFeed(podcast.getId());
         call.enqueue(new Callback<Feed>() {
             @Override
@@ -96,19 +104,16 @@ public class PodcastDetailFragment extends Fragment {
                 //tv.setText(t.getMessage());
                 Toast.makeText(getContext(),"Error fetching Feed: "+t.getMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        });*/
 
         //
-        RecyclerView mRecyclerView;
-        RecyclerView.Adapter mAdapter;
-        RecyclerView.LayoutManager linearLayoutManager;
         mRecyclerView = (RecyclerView) view.findViewById(R.id.detail_episodes);
         linearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(linearLayoutManager);
-
-        EpisodesAdapter adapter = new EpisodesAdapter(episodex);
         mRecyclerView.setAdapter(adapter);
-        Log.d("Adapter",""+adapter.episodes);
+
+        //adapter = new EpisodesAdapter(episodex);
+        //Log.d("Adapter",""+adapter.episodes);
 
 
         //
@@ -133,5 +138,30 @@ public class PodcastDetailFragment extends Fragment {
                 Toast.makeText(context,"Error fetching Feed", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    //Loader Stuff
+    @Override public Loader<List<Episode>> onCreateLoader(int id, Bundle args) {
+        // This is called when a new Loader needs to be created.  This
+        // sample only has one Loader with no arguments, so it is simple.
+        return new EpisodeLoader(getActivity(),podcast);
+    }
+
+    @Override public void onLoadFinished(Loader<List<Episode>> loader, List<Episode> data) {
+        // Set the new data in the adapter.
+        adapter = new EpisodesAdapter(data);
+        Log.d("__LoadFinish__",""+data.get(0).getTitle());
+        mRecyclerView.setAdapter(adapter);
+        // The list should now be shown.
+        /*if (isResumed()) {
+            set(true);
+        } else {
+            setListShownNoAnimation(true);
+        }*/
+    }
+
+    @Override public void onLoaderReset(Loader<List<Episode>> loader) {
+        // Clear the data in the adapter.
+        adapter = null;
     }
 }
