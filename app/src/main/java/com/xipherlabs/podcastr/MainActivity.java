@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.xipherlabs.podcastr.api.ApiClient;
 import com.xipherlabs.podcastr.api.ApiInterface;
+import com.xipherlabs.podcastr.model.Episode;
+import com.xipherlabs.podcastr.model.Feed;
 import com.xipherlabs.podcastr.model.Podcast;
 import com.xipherlabs.podcastr.model.PopularPodcasts;
 
@@ -192,6 +194,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

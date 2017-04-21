@@ -103,8 +103,8 @@ public class DiscoverFragment extends Fragment {
             protected Podcast parseSnapshot(DataSnapshot snapshot) {
                 Podcast podcast = super.parseSnapshot(snapshot);
                 if (podcast != null) {
-                    podcast.setId(snapshot.getKey());
-                    Log.d("PodcastSnap",""+snapshot.getValue());
+                    //podcast.setId(snapshot.getKey());
+                    //Log.d("PodcastSnap",""+snapshot.getValue());
                 }
                 return podcast;
             }
