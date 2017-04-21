@@ -64,4 +64,23 @@ public class Podcast implements Serializable{
         this.author = author;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj==null)
+            return false;
+        try {
+            final Podcast other = (Podcast) obj;
+
+            if (other.getId() == null || this.getId() == null) {
+                return false;
+            }else if (this.getId().compareTo(other.getId()) == 0) {
+                return true;
+            }else{
+                return false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
