@@ -71,17 +71,16 @@ public class PodcastDetailFragment extends Fragment {
         Log.d("DetailFrag",""+podcast.getId());
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        int feed = 1140596919;
-        Call<Feed> call = apiService.getFeed(feed);
+        Call<Feed> call = apiService.getFeed(podcast.getId());
         call.enqueue(new Callback<Feed>() {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> response) {
                 //Toast.makeText(getContext(),"Resp:"+response.raw().toString(), Toast.LENGTH_LONG).show();
-                tv.setText("Resp:"+response.raw().toString());
+                //tv.setText("Resp:"+response.raw().toString());
                 int statusCode = response.code();
                 Feed feed = response.body();
-                //Toast.makeText(getApplicationContext(),"Podcasts:"+popularPodcasts.getTotal()+" \n",Toast.LENGTH_LONG).show();
-                //int x = feed.getTotal();
+                Toast.makeText(getContext(),"Podcast:"+feed.getName()+" \n",Toast.LENGTH_LONG).show();
+                String x = feed.getTotal();
                 List<Episode> episodes = feed.getEpisodes();
 
                 /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -90,9 +89,9 @@ public class PodcastDetailFragment extends Fragment {
                 DatabaseReference myRef = database.getReference(user.getUid());
                 myRef.keepSynced(true);
                 myRef.child("episodes").setValue(episodes);*/
-                //Log.d("Feed",""+x);
-                /*for(Episode e:episodes)
-                    Log.d("Episode",""+e.getTitle());*/
+                Log.d("Feed",""+x);
+                for(Episode e:episodes)
+                    Log.d("Episode",""+e.getTitle());
             }
 
             @Override
@@ -102,14 +101,14 @@ public class PodcastDetailFragment extends Fragment {
             }
         });
 
-        //testFeed(view.getContext());
+        //getFeed(view.getContext());
         return view;
     }
 
 
-    public void testFeed(final Context context){
+    public void getFeed(final Context context){
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<Feed> call = apiService.getFeed(1140596919);
+        Call<Feed> call = apiService.getFeed("");
         call.enqueue(new Callback<Feed>() {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> response) {

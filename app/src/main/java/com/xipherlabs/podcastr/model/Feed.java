@@ -9,10 +9,10 @@ public class Feed implements Serializable {
 
     @SerializedName("status")
     @Expose
-    private Integer status;
+    private String status;
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private String id;
     @SerializedName("thumb")
     @Expose
     private String thumb;
@@ -36,10 +36,10 @@ public class Feed implements Serializable {
     private String feed;
     @SerializedName("total")
     @Expose
-    private Integer total;
+    private String total;
     @SerializedName("release")
     @Expose
-    private Integer release;
+    private String release;
     @SerializedName("episodes")
     @Expose
     private List<Episode> episodes = null;
@@ -47,7 +47,7 @@ public class Feed implements Serializable {
     public Feed() {
     }
 
-    public Feed(Integer status, Integer id, String thumb, String name, String site, String description, String author, String category, String feed, Integer total, Integer release, List<Episode> episodes) {
+    public Feed(String status, String id, String thumb, String name, String site, String description, String author, String category, String feed, String total, String release, List<Episode> episodes) {
         super();
         this.status = status;
         this.id = id;
@@ -63,19 +63,19 @@ public class Feed implements Serializable {
         this.episodes = episodes;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -135,19 +135,19 @@ public class Feed implements Serializable {
         this.feed = feed;
     }
 
-    public Integer getTotal() {
+    public String getTotal() {
         return total;
     }
 
-    public void setTotal(Integer total) {
+    public void setTotal(String total) {
         this.total = total;
     }
 
-    public Integer getRelease() {
+    public String getRelease() {
         return release;
     }
 
-    public void setRelease(Integer release) {
+    public void setRelease(String release) {
         this.release = release;
     }
 

@@ -20,7 +20,7 @@ public class Episode implements Serializable {
     private String link;
     @SerializedName("date")
     @Expose
-    private Integer date;
+    private String date;
     @SerializedName("description")
     @Expose
     private String description;
@@ -49,7 +49,7 @@ public class Episode implements Serializable {
      * @param thumb
      * @param size
      */
-    public Episode(String thumb, String author, String title, String link, Integer date, String description, String duration, String size, String mp3) {
+    public Episode(String thumb, String author, String title, String link, String date, String description, String duration, String size, String mp3) {
         super();
         this.thumb = thumb;
         this.author = author;
@@ -94,11 +94,11 @@ public class Episode implements Serializable {
         this.link = link;
     }
 
-    public Integer getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Integer date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

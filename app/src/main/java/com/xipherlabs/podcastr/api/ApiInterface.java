@@ -15,5 +15,5 @@ public interface ApiInterface {
 
 
     @GET("/api/podcast/us/{feed}/")
-    Call<Feed> getFeed(@Path("feed") int feed);
+    Call<Feed> getFeed(@Path("feed") String feed);
 }
