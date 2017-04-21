@@ -42,7 +42,8 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
     //RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager linearLayoutManager;
     EpisodesAdapter adapter;
-    TextView tv_desc;
+    //TextView tv_desc;
+    ExpandableTextView etv_desc;
     public PodcastDetailFragment() {
     }
 
@@ -68,7 +69,8 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_podcast_detail, container, false);
         ImageView img = (ImageView) view.findViewById(R.id.detail_image);
-        tv_desc = (TextView) view.findViewById(R.id.detail_description);
+        //tv_desc = (TextView) view.findViewById(R.id.detail_description);
+        etv_desc = (ExpandableTextView) view.findViewById(R.id.detail_exp_desc);
         getActivity().setTitle(podcast.getName());
         String imageUrl = podcast.getThumb();
         Glide.with(getContext())
@@ -120,7 +122,8 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
             return;
         }
         if(data.getDescription()!=null)
-            tv_desc.setText(data.getDescription());
+            //tv_desc.setText(data.getDescription());
+            etv_desc.setText(data.getDescription());
         if(data.getEpisodes()!=null)
             adapter = new EpisodesAdapter(data.getEpisodes());
         mRecyclerView.setAdapter(adapter);

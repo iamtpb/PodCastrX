@@ -21,7 +21,7 @@
                 android:layout_gravity="center"
                 android:padding="16dp"
                 android:id="@+id/detail_image"/>
-            <TextView
+           <!-- <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -29,7 +29,15 @@
                 android:textAlignment="center"
                 android:id="@+id/detail_description"
                 android:text="Description"
-                style="?attr/textAppearanceListItem" />
+                style="?attr/textAppearanceListItem" />-->
+            <com.xipherlabs.podcastr.ExpandableTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/detail_exp_desc"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                style="?attr/textAppearanceListItem"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
