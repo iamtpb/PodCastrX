@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     public View bottomSheet = null;
 
+    Fragment fragment = null;
+    Class fragmentClass = DiscoverFragment.class;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +83,10 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         };
-
         FragmentManager fragmentManager = getSupportFragmentManager();
+        if(fragment!=null){
+            fragmentManager.beginTransaction().replace(R.id.content_pane, fragment).commit();
+        }
         fragmentManager.beginTransaction().replace(R.id.content_pane, (Fragment) DiscoverFragment.newInstance()).commit();
     }
 
@@ -123,8 +127,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment fragment = null;
-        Class fragmentClass = DiscoverFragment.class;
+        //Fragment fragment = null;
+        //Class fragmentClass = DiscoverFragment.class;
 
         if (id == R.id.nav_discover) {
             fragmentClass = DiscoverFragment.class;
