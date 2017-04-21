@@ -58,13 +58,9 @@ public class PodcastDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_podcast_detail, container, false);
-        //Tost.makeText(getContext(),"Podcast:"+podcast.getName(),Toast.LENGTH_LONG).show();
-        //Toast.makeText(getContext(),"Did it!",Toast.LENGTH_LONG).show();
-
         ImageView img = (ImageView) view.findViewById(R.id.detail_image);
-        final TextView tv = (TextView) view.findViewById(R.id.detail_name);
         final TextView tv_desc = (TextView) view.findViewById(R.id.detail_description);
-        tv.setText(podcast.getName());
+        getActivity().setTitle(podcast.getName());
         String imageUrl = podcast.getThumb();
         Glide.with(getContext())
                 .load(podcast.getThumb().replace("170x170","600x600"))
@@ -97,7 +93,7 @@ public class PodcastDetailFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Feed> call, Throwable t) {
-                tv.setText(t.getMessage());
+                //tv.setText(t.getMessage());
                 Toast.makeText(getContext(),"Error fetching Feed: "+t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
