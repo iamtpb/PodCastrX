@@ -30,6 +30,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.xipherlabs.podcastr.MainActivity" />
         </activity>
+        <activity android:name=".AudioActivity"></activity>
+        <service
+            android:name=".ServiceMusicPlayer"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
 
 </manifest>

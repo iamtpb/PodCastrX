@@ -1,9 +1,13 @@
 package com.xipherlabs.podcastr;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
@@ -18,8 +22,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.MediaController;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -31,22 +36,23 @@ import com.xipherlabs.podcastr.api.ApiClient;
 import com.xipherlabs.podcastr.api.ApiInterface;
 import com.xipherlabs.podcastr.model.Episode;
 import com.xipherlabs.podcastr.model.Feed;
+import com.xipherlabs.podcastr.model.MusicController;
 import com.xipherlabs.podcastr.model.Podcast;
 import com.xipherlabs.podcastr.model.PopularPodcasts;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     public View bottomSheet = null;
 
+    BottomSheetBehavior mBottomSheetBehavior1;
+    Button mButton1;
     Fragment fragment = null;
     Class fragmentClass = DiscoverFragment.class;
 
@@ -88,6 +94,33 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().replace(R.id.content_pane, fragment).commit();
         }
         fragmentManager.beginTransaction().replace(R.id.content_pane, (Fragment) DiscoverFragment.newInstance()).commit();
+
+        //Bottom Sheet Player stuff?
+        View bottomSheet = findViewById(R.id.bottom_sheet1);
+        mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
+        mBottomSheetBehavior1.setHideable(true);
+        mBottomSheetBehavior1.setPeekHeight(20);
+        mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_HIDDEN);
+       /*  mButton1 = (Button) findViewById(R.id.button1);
+        mButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    mButton1.setText("XXX");
+                }
+                else {
+                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    mButton1.setText("_X_");
+                }
+            }
+        });
+*/
+        /*JcPlayerView jcplayerView = (JcPlayerView) findViewById(R.id.jcp);
+
+        jcplayerView.initAnonPlaylist(jcAudios);
+        jcplayerView.createNotification();*/
+
     }
 
     @Override
@@ -129,13 +162,26 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         //Fragment fragment = null;
         //Class fragmentClass = DiscoverFragment.class;
-
+        boolean audioPlay = false;
         if (id == R.id.nav_discover) {
             fragmentClass = DiscoverFragment.class;
         } else if (id == R.id.nav_favorites) {
             fragmentClass = FavoritesFragment.class;
         } else if (id == R.id.nav_nowplaying) {
-            fragmentClass = NowPlaying.class;
+            if(!audioPlay) {
+                //handleVolley();
+                //call service.
+                /*Intent intent = new Intent(getApplicationContext(), ServiceMusicPlayer.class);
+                intent.putExtra("media_file", url);
+                intent.putExtra("duration", 100);
+                startService(intent);*/
+                Intent intent = new Intent(this,AudioActivity.class);
+                startActivity(intent);
+                fragmentClass = NowPlaying.class;
+            }else{
+                fragmentClass = DiscoverFragment.class;
+                Toast.makeText(this, "No Playback.", Toast.LENGTH_SHORT).show();
+            }
         }
         try {
             fragment = (Fragment) fragmentClass.newInstance();
@@ -168,6 +214,7 @@ public class MainActivity extends AppCompatActivity
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+//        controller.hide();
     }
 
     public void syncPodcasts(){

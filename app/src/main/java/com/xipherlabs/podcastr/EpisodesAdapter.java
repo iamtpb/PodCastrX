@@ -1,7 +1,9 @@
 package com.xipherlabs.podcastr;
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.provider.MediaStore;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,11 +15,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import com.xipherlabs.podcastr.model.Episode;
 
 import java.io.IOException;
 import java.util.List;
-
 /**
  * Created by xipher on 21/4/17.
  */
@@ -63,16 +65,36 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.Episod
             @Override
             public void onClick(View v) {
                 Toast.makeText(personViewHolder.personPhoto.getContext(),"Touched Play!",Toast.LENGTH_SHORT).show();
-                String url = "http://........"; // your URL here
-                MediaPlayer mediaPlayer = new MediaPlayer();
+                String url = episodes.get(index).getMp3();
+               // Toast.makeText(personViewHolder.personName.getContext(), "/", Toast.LENGTH_SHORT).show();
+                //TODO: Add music player Integration
+                //songs.add(url);
+                //jcAudios.add(JcAudio.createFromURL("url audio",url));
+                //String url = "URL"; // your URL here
+                /*MediaPlayer mediaPlayer = new MediaPlayer();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                try {
-                    mediaPlayer.setDataSource(episodes.get(index).getMp3());
-                    mediaPlayer.prepare(); // might take long! (for buffering, etc)
-                    mediaPlayer.start();
-                } catch (IOException e) {
+                try{
+                    mediaPlayer.setDataSource(url);
+                    mediaPlayer.prepareAsync(); // might take long! (for buffering, etc)d
+                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            mp.start();
+                        }
+                    });
+                }catch (Exception e){
                     e.printStackTrace();
+                }*/
+                try{
+                    AudioActivity.url = url;
+                    Intent intent = new Intent(personViewHolder.personPhoto.getContext(), AudioActivity.class);
+                    //intent.putExtra("media_file", url);
+                    //intent.putExtra("duration", 100);
+                    personViewHolder.personPhoto.getContext().startActivity(intent);
+                }catch(Exception e){
+                    Toast.makeText( personViewHolder.personPhoto.getContext(),"Error",Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
     }
